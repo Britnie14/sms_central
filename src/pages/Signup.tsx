@@ -14,7 +14,7 @@ const Signup: React.FC = () => {
   const [address, setAddress] = useState("r-gerona bulan sorsogon");
   const [birthday, setBirthday] = useState("2002-09-24");
   const [gender, setGender] = useState("Female");
-  const [phoneNumber, setPhoneNumber] = useState("n/a");
+  const [phoneNumber, setPhoneNumber] = useState("09");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
