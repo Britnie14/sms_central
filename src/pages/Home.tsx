@@ -20,7 +20,7 @@ const Home: React.FC = () => {
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-2">Recent Reports</h2>
           <ul>
-            <li>Report #123 - Minor Looban accident at 123 Main St.</li>
+            <li>Report #123 - Minor Looban Bulusan accident at 123 Main St.</li>
             <li>Report #124 - Hazardous material spill at 456 Elm St.</li>
             <li>Report #125 - Heart attack at 789 Oak St.</li>
           </ul>
