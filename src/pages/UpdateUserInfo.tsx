@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebaseConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 // Define an interface to type the user data
 interface UserData {
@@ -17,7 +17,6 @@ interface UserData {
 }
 
 const UpdateUserInfo: React.FC = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [formValues, setFormValues] = useState<UserData>({
     address: "",
     birthday: "",
@@ -45,7 +44,6 @@ const UpdateUserInfo: React.FC = () => {
           const docSnap = await getDoc(userDoc);
           if (docSnap.exists()) {
             const data = docSnap.data() as UserData;
-            setUserData(data);
             setFormValues(data);
           } else {
             console.error("No user data found");
@@ -86,22 +84,28 @@ const UpdateUserInfo: React.FC = () => {
 
         uploadTask.on(
           "state_changed",
-          (snapshot) => {},
-          (error) => {
+          // Optionally handle progress here
+          () => {},
+          () => {
+            // Handle upload error
             setError("Failed to upload image");
             setUploading(false);
           },
           async () => {
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await updateDoc(doc(db, "users", user.uid), {
-              ...formValues,
-              profile_image_url: downloadURL,
-            });
-            setSuccess("User information updated successfully");
-            setError(null);
-            setUploading(false);
-            window.location.reload(); // Refresh the page
-            navigate("/home"); // Navigate to home page
+            try {
+              await updateDoc(doc(db, "users", user.uid), {
+                ...formValues,
+                profile_image_url: downloadURL,
+              });
+              setSuccess("User information updated successfully");
+              setError(null);
+              navigate("/home"); // Navigate to home page
+            } catch (error) {
+              setError("Failed to update user information");
+            } finally {
+              setUploading(false);
+            }
           }
         );
       } else {
@@ -110,7 +114,6 @@ const UpdateUserInfo: React.FC = () => {
           await updateDoc(userDoc, { ...formValues });
           setSuccess("User information updated successfully");
           setError(null);
-          window.location.reload(); // Refresh the page
           navigate("/home"); // Navigate to home page
         } catch (error) {
           setError("Failed to update user information");

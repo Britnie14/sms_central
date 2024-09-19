@@ -19,7 +19,6 @@ interface IncidentReport {
 const EditIncidentReport: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate(); // Use navigate hook for navigation
-  const [report, setReport] = useState<IncidentReport | null>(null);
   const [formData, setFormData] = useState<Partial<IncidentReport>>({
     cause: "",
     dateTime: "",
@@ -45,7 +44,6 @@ const EditIncidentReport: React.FC = () => {
 
         if (docSnap.exists()) {
           const data = docSnap.data() as IncidentReport;
-          setReport(data);
           setFormData(data); // Initialize form data with fetched report data
           setImagePreviews(data.images || []);
         } else {
@@ -109,7 +107,6 @@ const EditIncidentReport: React.FC = () => {
         ...formData,
         images: [...(formData.images || []), ...(uploadedImageUrls || [])],
       };
-      //dsdsd sw da
       const docRef = doc(db, "incidentReports", id);
       await updateDoc(docRef, updatedFormData as Partial<IncidentReport>);
       alert("Incident report updated successfully!");

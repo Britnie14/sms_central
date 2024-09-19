@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaPalette, FaRegFileAlt, FaChartBar } from "react-icons/fa";
+import { FaHome, FaPalette, FaChartBar } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 
 const Sidebar: React.FC = () => {

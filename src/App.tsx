@@ -25,7 +25,6 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(
     null
   );
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true); // Track the sidebar state
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -56,7 +55,7 @@ const App: React.FC = () => {
         )}
         <div
           className={`flex flex-1 ${
-            isAuthenticated ? (isSidebarOpen ? "ml-64" : "ml-16") : "ml-0"
+            isAuthenticated ? "ml-64" : "ml-0"
           } transition-all duration-300`}
         >
           <main className="flex-1 p-6 bg-gray-100">
@@ -67,23 +66,11 @@ const App: React.FC = () => {
                   <Route path="/home" element={<Home />} />
                   <Route path="/color-codes" element={<ColorCodes />} />
                   <Route path="/sms-reports" element={<SMSReports />} />
-                  <Route
-                    path="/generate-reports"
-                    element={<GenerateReports />}
-                  />
+                  <Route path="/generate-reports" element={<GenerateReports />} />
                   <Route path="/update-password" element={<UpdatePassword />} />
-                  <Route
-                    path="/update-user-info"
-                    element={<UpdateUserInfo />}
-                  />
-                  <Route
-                    path="/incident/:id"
-                    element={<FullIncidentReport />}
-                  />
-                  <Route
-                    path="/edit-incident/:id"
-                    element={<EditIncidentReport />}
-                  />
+                  <Route path="/update-user-info" element={<UpdateUserInfo />} />
+                  <Route path="/incident/:id" element={<FullIncidentReport />} />
+                  <Route path="/edit-incident/:id" element={<EditIncidentReport />} />
                   <Route path="/create-report" element={<CreateReport />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </>
