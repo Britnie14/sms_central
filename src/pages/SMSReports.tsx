@@ -1,105 +1,70 @@
-import React from "react";
-
-// Sample data for SMS reports
-const reports = [
-  {
-    color: "#4CAF50", // Green
-    colorTitle: "Green: Non-Emergency Incidents",
-    number: "09123456789",
-    address: "123 Main St",
-    report: "Minor accident",
-  },
-  {
-    color: "#FFEB3B", // Yellow
-    colorTitle: "Yellow: Warnings or Potential Threats",
-    number: "09987654321",
-    address: "456 Elm St",
-    report: "Hazardous material spill",
-  },
-  {
-    color: "#2196F3", // Blue
-    colorTitle: "Blue: Medical Emergencies",
-    number: "09555555555",
-    address: "789 Oak St",
-    report: "Heart attack",
-  },
-  {
-    color: "#F44336", // Red
-    colorTitle: "Red: Critical or Life-Threatening Incidents",
-    number: "09111222333",
-    address: "101 Pine St",
-    report: "Building collapse",
-  },
-  {
-    color: "#00BCD4", // Cyan Blue
-    colorTitle: "Cyan Blue: Police Assistance Button",
-    number: "09444555666",
-    address: "202 Maple St",
-    report: "Police assistance needed",
-  },
-  // Additional reports...
-];
+// src/components/SMSReports/SMSReports.tsx
+import React, { useState } from "react";
+import VerifiedSMS from "../components/SMSReports/VerifiedSMS";
+import NonVerifiedSMS from "../components/SMSReports/NonVerifiedSMS";
+import RawSMS from "../components/SMSReports/RawSMS";
+import IncidentVerificationMessages from "../components/SMSReports/IncidentVerificationMessages"; // Import the new component
+import ColorCodes from "../components/ColorCodes"; // Adjust the path as necessary
+import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Import icons for dropdown
 
 const SMSReports: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("verified");
+  const [showDropdown, setShowDropdown] = useState(false);
+
   return (
     <div className="flex-1 p-6 bg-gray-100 min-h-screen mt-16">
       <h1 className="text-3xl font-bold mb-4">SMS Reports</h1>
-      <p className="text-lg mb-6">
-        Here you can manage and view SMS reports for your application.
-      </p>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-          <thead>
-            <tr>
-              <th className="p-3 border-b border-gray-200 text-left">
-                Color Code
-              </th>
-              <th className="p-3 border-b border-gray-200 text-left">Title</th>
-              <th className="p-3 border-b border-gray-200 text-left">Number</th>
-              <th className="p-3 border-b border-gray-200 text-left">
-                Address
-              </th>
-              <th className="p-3 border-b border-gray-200 text-left">Report</th>
-              <th className="p-3 border-b border-gray-200 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map((report, index) => (
-              <tr key={index}>
-                <td className="p-3 border-b border-gray-200">
-                  <div
-                    className="w-6 h-6 rounded"
-                    style={{ backgroundColor: report.color }}
-                  ></div>
-                </td>
-                <td className="p-3 border-b border-gray-200 font-bold">
-                  {report.colorTitle}
-                </td>
-                <td className="p-3 border-b border-gray-200">
-                  {report.number}
-                </td>
-                <td className="p-3 border-b border-gray-200">
-                  {report.address}
-                </td>
-                <td className="p-3 border-b border-gray-200 truncate max-w-xs">
-                  {report.report}
-                </td>
-                <td className="p-3 border-b border-gray-200">
-                  <button
-                    onClick={() => {
-                      // Add response logic here
-                      alert("Respond button clicked");
-                    }}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    Respond
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <button
+            className={`px-4 py-2 rounded ${activeTab === "verified" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            onClick={() => setActiveTab("verified")}
+          >
+            Verified SMS
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${activeTab === "non-verified" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            onClick={() => setActiveTab("non-verified")}
+          >
+            Non-Verified SMS
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${activeTab === "raw" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            onClick={() => setActiveTab("raw")}
+          >
+            Declined
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${activeTab === "incident" ? "bg-blue-500 text-white" : "bg-gray-200"}`} // New tab styling
+            onClick={() => setActiveTab("incident")}
+          >
+            Not Confirmed
+          </button>
+        </div>
+
+        {/* Color Codes Dropdown */}
+        <div className="relative">
+          <button
+            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            Color Codes
+            {showDropdown ? <FaChevronUp className="w-5 h-5 ml-2" /> : <FaChevronDown className="w-5 h-5 ml-2" />}
+          </button>
+
+          {showDropdown && (
+            <div className="absolute right-0 top-12 bg-white p-4 rounded-lg shadow-md z-10">
+              <ColorCodes onSelect={(color: string, label: string) => console.log(`Selected: ${color} - ${label}`)} />
+            </div>
+          )}
+        </div>
       </div>
+
+      {activeTab === "verified" && <VerifiedSMS />}
+      {activeTab === "non-verified" && <NonVerifiedSMS />}
+      {activeTab === "raw" && <RawSMS />}
+      {activeTab === "incident" && <IncidentVerificationMessages />} {/* Render new component */}
     </div>
   );
 };

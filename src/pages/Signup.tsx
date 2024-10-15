@@ -26,11 +26,7 @@ const Signup: React.FC = () => {
 
     try {
       // Create a new user with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       let profileImageUrl = "";
@@ -68,6 +64,7 @@ const Signup: React.FC = () => {
         profile_image_url: profileImageUrl,
       });
 
+      // Optionally navigate to a different page or show user details
       navigate("/home"); // Redirect to home page after signup
     } catch (error: any) {
       setError("Failed to sign up. Please check your details.");
@@ -112,11 +109,9 @@ const Signup: React.FC = () => {
           Sign Up
         </Typography>
         <form onSubmit={handleSignup} className="space-y-6 w-full">
+          {/* Form Fields */}
           <div>
-            <label
-              htmlFor="firstName"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="firstName" className="block text-gray-700 font-semibold">
               First Name
             </label>
             <Input
@@ -129,10 +124,7 @@ const Signup: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="lastName"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="lastName" className="block text-gray-700 font-semibold">
               Last Name
             </label>
             <Input
@@ -145,10 +137,7 @@ const Signup: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="email" className="block text-gray-700 font-semibold">
               Email
             </label>
             <Input
@@ -161,10 +150,7 @@ const Signup: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="password" className="block text-gray-700 font-semibold">
               Password
             </label>
             <Input
@@ -177,10 +163,7 @@ const Signup: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="profileImage"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="profileImage" className="block text-gray-700 font-semibold">
               Profile Image
             </label>
             <Input
@@ -200,10 +183,7 @@ const Signup: React.FC = () => {
             )}
           </div>
           <div>
-            <label
-              htmlFor="address"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="address" className="block text-gray-700 font-semibold">
               Address
             </label>
             <Input
@@ -216,10 +196,7 @@ const Signup: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="birthday"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="birthday" className="block text-gray-700 font-semibold">
               Birthday
             </label>
             <Input
@@ -232,10 +209,7 @@ const Signup: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="gender"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="gender" className="block text-gray-700 font-semibold">
               Gender
             </label>
             <select
@@ -244,15 +218,13 @@ const Signup: React.FC = () => {
               value={gender}
               onChange={(e) => setGender(e.target.value)}
             >
+              <option value="">Select Gender</option>
               <option value="Female">Female</option>
               <option value="Male">Male</option>
             </select>
           </div>
           <div>
-            <label
-              htmlFor="phoneNumber"
-              className="block text-gray-700 font-semibold"
-            >
+            <label htmlFor="phoneNumber" className="block text-gray-700 font-semibold">
               Phone Number
             </label>
             <Input

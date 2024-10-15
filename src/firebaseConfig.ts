@@ -5,13 +5,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCYwt8I-fVFJTTGJ0UkoWZbqFfMcscY7_Y",
-  authDomain: "sms-response-f57a9.firebaseapp.com",
-  databaseURL: "https://sms-response-f57a9-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "sms-response-f57a9",
-  storageBucket: "sms-response-f57a9.appspot.com",
-  messagingSenderId: "748303894788",
-  appId: "1:748303894788:web:e0b4ed675cf4aaed2da851"
+  apiKey: "AIzaSyDs4c6-R3u7yzm_dl5rzQJ1_Xkk5kTvuqg",
+  authDomain: "sms-response-58493.firebaseapp.com",
+  projectId: "sms-response-58493",
+  storageBucket: "sms-response-58493.appspot.com",
+  messagingSenderId: "534301049498",
+  appId: "1:534301049498:web:f82132e65d659e516f1523"
 };
 
 // Initialize Firebase
