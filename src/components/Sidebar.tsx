@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
           <li>
             <Link to="/generate-reports" className="flex items-center p-4 hover:bg-gray-700">
               <FaChartBar size={20} className="mr-4" />
-              <span>Generate Reports</span>
+              <span>File Reports</span>
             </Link>
           </li>
         </ul>

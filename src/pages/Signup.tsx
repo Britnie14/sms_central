@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebaseConfig"; // Import the initialized Firebase Auth, Firestore, and Storage
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { Box, Button, Container, Input, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -87,18 +87,34 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      className="min-h-screen flex items-center justify-center"
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100vh", // Full height of the viewport
+        overflow: "hidden", // Hide overflow to ensure the image fits
+        backgroundImage: "url('https://i.ibb.co/xsDGfmp/159819834-4159483757419889-9111704459298329734-n.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        alignItems: "center", // Center vertically
+        justifyContent: "center", // Center horizontally
+        margin: 0, // Remove default margin
+        padding: 0, // Remove default padding
+      }}
     >
       <Box
-        className="bg-white p-8 rounded-lg shadow-lg w-full"
+        className="bg-white bg-opacity-30 backdrop-blur-md p-8 rounded-lg shadow-lg w-full max-w-sm"
         sx={{
+          maxHeight: "90vh", // Maximum height for the card
+          overflowY: "auto", // Enable vertical scrolling
           marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          border: "1px solid rgba(255, 255, 255, 0.2)", // Optional border for more glass effect
         }}
       >
         <Typography
@@ -108,13 +124,14 @@ const Signup: React.FC = () => {
         >
           Sign Up
         </Typography>
+       
         <form onSubmit={handleSignup} className="space-y-6 w-full">
           {/* Form Fields */}
           <div>
             <label htmlFor="firstName" className="block text-gray-700 font-semibold">
               First Name
             </label>
-            <Input
+            <input
               type="text"
               id="firstName"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -127,7 +144,7 @@ const Signup: React.FC = () => {
             <label htmlFor="lastName" className="block text-gray-700 font-semibold">
               Last Name
             </label>
-            <Input
+            <input
               type="text"
               id="lastName"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -140,7 +157,7 @@ const Signup: React.FC = () => {
             <label htmlFor="email" className="block text-gray-700 font-semibold">
               Email
             </label>
-            <Input
+            <input
               type="email"
               id="email"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -153,7 +170,7 @@ const Signup: React.FC = () => {
             <label htmlFor="password" className="block text-gray-700 font-semibold">
               Password
             </label>
-            <Input
+            <input
               type="password"
               id="password"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -166,7 +183,7 @@ const Signup: React.FC = () => {
             <label htmlFor="profileImage" className="block text-gray-700 font-semibold">
               Profile Image
             </label>
-            <Input
+            <input
               type="file"
               id="profileImage"
               className="w-full mt-2"
@@ -186,7 +203,7 @@ const Signup: React.FC = () => {
             <label htmlFor="address" className="block text-gray-700 font-semibold">
               Address
             </label>
-            <Input
+            <input
               type="text"
               id="address"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -199,7 +216,7 @@ const Signup: React.FC = () => {
             <label htmlFor="birthday" className="block text-gray-700 font-semibold">
               Birthday
             </label>
-            <Input
+            <input
               type="date"
               id="birthday"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
@@ -227,33 +244,26 @@ const Signup: React.FC = () => {
             <label htmlFor="phoneNumber" className="block text-gray-700 font-semibold">
               Phone Number
             </label>
-            <Input
-              type="text"
+            <input
+              type="tel"
               id="phoneNumber"
               className="w-full mt-2 p-2 border border-gray-300 rounded-md"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
+              required
             />
           </div>
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          {error && (
+            <Typography className="text-red-500 text-center">
+              {error}
+            </Typography>
+          )}
+          <Button type="submit" variant="contained" color="primary" className="w-full">
             Sign Up
           </Button>
         </form>
-        <Typography className="mt-4 text-center">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500">
-            Login
-          </a>
-        </Typography>
       </Box>
-    </Container>
+    </div>
   );
 };
 
