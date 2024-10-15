@@ -2,7 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import { auth } from "./firebaseConfig"; // Import the initialized Firebase Auth
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Login from "./pages/Login";
@@ -63,14 +63,14 @@ const App: React.FC = () => {
                   <Route path="/incident/:id" element={<FullIncidentReport />} />
                   <Route path="/edit-incident/:id" element={<EditIncidentReport />} />
                   <Route path="/create-report" element={<CreateReport />} />
-                  <Route path="/respond" element={<Respond />} /> {/* Add route for Respond */}
-                  <Route path="*" element={<Navigate to="/" />} />
+                  <Route path="/respond" element={<Respond />} />
+                  <Route path="*" element={<Navigate to="/" />} /> {/* Redirect any unmatched route to Home */}
                 </>
               ) : (
                 <>
                   <Route path="/" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
-                  <Route path="*" element={<Navigate to="/" />} />
+                  <Route path="*" element={<Navigate to="/" />} /> {/* Redirect any unmatched route to Login */}
                 </>
               )}
             </Routes>
