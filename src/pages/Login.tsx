@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig"; // Import the initialized Firebase Auth
 import { TextField, Button, Typography, Box, Container } from "@mui/material"; // Material UI Components
@@ -86,9 +86,9 @@ const Login: React.FC = () => {
         </form>
         <Typography className="mt-4 text-center">
           Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
+          <Link to="/signup" className="text-blue-500 hover:underline">
             Sign up
-          </a>
+          </Link>
         </Typography>
       </Box>
     </Container>
