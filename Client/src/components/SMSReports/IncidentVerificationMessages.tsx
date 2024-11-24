@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebaseConfig"; // Adjust the path if necessary
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 // Define the structure of a message
 interface DeclinedMessage {
@@ -15,32 +15,62 @@ interface DeclinedMessage {
   status: string;
 }
 
+const barangays = [
+  "All Barangay",
+  "Bagacay", "Central", "Cogon", "Dancalan", "Dapdap", "Lalud", "Looban", "Mabuhay",
+  "Madlawon", "Poctol", "Porog", "Sabang", "Salvacion", "San Antonio", "San Bernardo",
+  "San Francisco", "Kapangihan", "San Isidro", "San Jose", "San Rafael", "San Roque",
+  "Buhang", "San Vicente", "Santa Barbara", "Sapngan", "Tinampo",
+  "Unknown"
+];
+
 const IncidentVerificationMessages: React.FC = () => {
   const [messages, setMessages] = useState<DeclinedMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedBarangay, setSelectedBarangay] = useState<string>("All Barangay");
 
   useEffect(() => {
-    const responseCollection = collection(db, "sms_received");
+    const baseQuery = collection(db, "sms_received");
 
-    const unsubscribe = onSnapshot(responseCollection, (snapshot) => {
-      const messagesList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as DeclinedMessage[];
-
-      // Filter for messages where status is "Not Confirmed"
-      const declinedMessages = messagesList.filter(
-        (message) => message.status === "Not Confirmed"
+    let queryCondition;
+    if (selectedBarangay === "All Barangay") {
+      queryCondition = query(baseQuery, where("status", "==", "Not Confirmed"));
+    } else if (selectedBarangay === "Unknown") {
+      queryCondition = query(baseQuery, where("status", "==", "Not Confirmed"));
+    } else {
+      queryCondition = query(
+        baseQuery,
+        where("status", "==", "Not Confirmed"),
+        where("barangay", "==", selectedBarangay)
       );
+    }
 
-      setMessages(declinedMessages);
-      setLoading(false);
-    });
+    const unsubscribe = onSnapshot(
+      queryCondition,
+      (snapshot) => {
+        const messagesList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as DeclinedMessage[];
+
+        const filteredMessages =
+          selectedBarangay === "Unknown"
+            ? messagesList.filter((message) => !barangays.includes(message.barangay || ""))
+            : messagesList;
+
+        setMessages(filteredMessages);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching messages:", error);
+        setLoading(false);
+      }
+    );
 
     return () => {
       unsubscribe(); // Clean up listener when component unmounts
     };
-  }, []);
+  }, [selectedBarangay]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -49,6 +79,26 @@ const IncidentVerificationMessages: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Not Confirmed by Barangay Captain SMS Messages</h2>
+
+      {/* Barangay Dropdown */}
+      <div className="mb-4">
+        <label htmlFor="barangay-select" className="block text-gray-700 font-medium mb-2">
+          Select Barangay
+        </label>
+        <select
+          id="barangay-select"
+          value={selectedBarangay}
+          onChange={(e) => setSelectedBarangay(e.target.value)}
+          className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {barangays.map((barangay) => (
+            <option key={barangay} value={barangay}>
+              {barangay}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {messages.length > 0 ? (
         <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-lg">
           <thead className="bg-gray-200">
@@ -79,7 +129,7 @@ const IncidentVerificationMessages: React.FC = () => {
           </tbody>
         </table>
       ) : (
-        <div>No declined messages found.</div>
+        <div>No messages found for the selected barangay.</div>
       )}
     </div>
   );

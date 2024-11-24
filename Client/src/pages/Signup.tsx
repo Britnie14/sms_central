@@ -23,18 +23,18 @@ const Signup: React.FC = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       // Create a new user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       let profileImageUrl = "";
       if (profileImage) {
         // Upload profile image to Firebase Storage
         const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
         const uploadTask = uploadBytesResumable(storageRef, profileImage);
-
+  
         await new Promise<void>((resolve, reject) => {
           uploadTask.on(
             "state_changed",
@@ -51,7 +51,7 @@ const Signup: React.FC = () => {
           );
         });
       }
-
+  
       // Store user information in Firestore 'users' collection
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
@@ -63,9 +63,9 @@ const Signup: React.FC = () => {
         phone_number: phoneNumber,
         profile_image_url: profileImageUrl,
       });
-
-      // Optionally navigate to a different page or show user details
-      navigate("/home"); // Redirect to home page after signup
+  
+      // Redirect to home page after successful signup, passing necessary user info via state
+      navigate("/home", { state: { user } }); // Pass the user object to the home page
     } catch (error: any) {
       setError("Failed to sign up. Please check your details.");
       console.error(error);

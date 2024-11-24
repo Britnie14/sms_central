@@ -15,40 +15,67 @@ interface VerifiedMessage {
   response: string | null;
 }
 
+const barangays = [
+  "All Barangay","Unknown",
+  "Bagacay", "Central", "Cogon", "Dancalan", "Dapdap", "Lalud", "Looban", "Mabuhay",
+  "Madlawon", "Poctol", "Porog", "Sabang", "Salvacion", "San Antonio", "San Bernardo",
+  "San Francisco", "Kapangihan", "San Isidro", "San Jose", "San Rafael", "San Roque",
+  "Buhang", "San Vicente", "Santa Barbara", "Sapngan", "Tinampo"
+];
+
 const VerifiedSMS: React.FC = () => {
   const [messages, setMessages] = useState<VerifiedMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<VerifiedMessage | null>(null);
+  const [selectedBarangay, setSelectedBarangay] = useState<string>("All Barangay");
 
   useEffect(() => {
+    const baseQuery = collection(db, "sms_received");
+  
+    let queryCondition;
+    if (selectedBarangay === "All Barangay") {
+      queryCondition = query(baseQuery, where("status", "==", "Verified"));
+    } else if (selectedBarangay === "Unknown") {
+      queryCondition = query(baseQuery, where("status", "==", "Verified"));
+    } else {
+      queryCondition = query(baseQuery, where("status", "==", "Verified"), where("barangay", "==", selectedBarangay));
+    }
+  
     const unsubscribe = onSnapshot(
-      query(collection(db, "sms_received"), where("status", "==", "Verified")),
+      queryCondition,
       (snapshot) => {
         const messagesList = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as VerifiedMessage[];
-
-        setMessages(messagesList);
-        setLoading(false); // Set loading to false once data is fetched
+  
+        const filteredMessages =
+          selectedBarangay === "Unknown"
+            ? messagesList.filter(
+                (message) => !barangays.includes(message.barangay || "")
+              )
+            : messagesList;
+  
+        setMessages(filteredMessages);
+        setLoading(false);
       },
       (error) => {
         console.error("Error fetching verified messages:", error);
-        setLoading(false); // Ensure loading is false on error
+        setLoading(false);
       }
     );
-
-    // Cleanup function to unsubscribe from the listener when the component unmounts
+  
     return () => unsubscribe();
-  }, []);
+  }, [selectedBarangay]);
+  
 
   const handleOpenDialog = (message: VerifiedMessage) => {
     setSelectedMessage(message);
     setOpenDialog(true);
   };
 
-  const handleSelectContact = (contact: any) => { // Change 'Contact' to 'any' or define it according to your needs
+  const handleSelectContact = (contact: any) => {
     // Handle the selected contact and use the passed information
     console.log("Selected contact:", contact);
     console.log("Message:", selectedMessage?.message);
@@ -64,6 +91,26 @@ const VerifiedSMS: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Verified SMS</h2>
+
+      {/* Barangay Dropdown */}
+      <div className="mb-4">
+        <label htmlFor="barangay-select" className="block text-gray-700 font-medium mb-2">
+          Select Barangay
+        </label>
+        <select
+          id="barangay-select"
+          value={selectedBarangay}
+          onChange={(e) => setSelectedBarangay(e.target.value)}
+          className="w-full px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {barangays.map((barangay) => (
+            <option key={barangay} value={barangay}>
+              {barangay}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {messages.length > 0 ? (
         <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-lg">
           <thead className="bg-gray-200">
@@ -111,7 +158,7 @@ const VerifiedSMS: React.FC = () => {
           barangay={selectedMessage.barangay || ""}
           incidentType={selectedMessage.incidentType || null}
           timestamp={selectedMessage.timestamp}
-          messageId={selectedMessage.id} // Now always a string
+          messageId={selectedMessage.id}
         />
       )}
     </div>
