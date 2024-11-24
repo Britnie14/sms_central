@@ -1,9 +1,0 @@
-{
-  "projects": {
-    "default": "sms-response-58493",
-    "staging": "sms-response-58493"
-  },
-  "targets": {},
-  "etags": {},
-  "dataconnectEmulatorConfig": {}
-}
